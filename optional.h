@@ -149,6 +149,16 @@ public:
         }
     }
 
+    template <typename... Ts>
+    void Emplace(Ts&& ...vs) {
+        if (is_initialized_) {
+            value_->~T();
+            
+        }
+        value_ = new (data_) T(std::forward<Ts>(vs)...);
+        is_initialized_ = true;
+    }
+
 private:
     // alignas нужен для правильного выравнивания блока памяти
     alignas(T) char data_[sizeof(T)];
